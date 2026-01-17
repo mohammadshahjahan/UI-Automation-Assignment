@@ -1,0 +1,55 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      # 1. Checkout the code
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      # 2. Set up JDK 17
+      - name: Set up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: 17
+
+      # 3. Set up Node.js (required for Playwright)
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 20
+
+      # 4. Install Playwright dependencies
+      - name: Install Playwright browsers
+        run: npx playwright install --with-deps
+
+      # 5. Build and run tests with Maven
+      - name: Build and run tests
+        run: mvn clean verify
+
+      # 6. Archive test results
+      - name: Archive TestNG Results
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: testng-results
+          path: target/surefire-reports/
+
+      # 7. Archive screenshots
+      - name: Archive Screenshots
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: screenshots
+          path: screenshots/
