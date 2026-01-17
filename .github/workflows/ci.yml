@@ -41,7 +41,7 @@ jobs:
       # 6. Archive test results
       - name: Archive TestNG Results
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: testng-results
           path: target/surefire-reports/
@@ -49,7 +49,7 @@ jobs:
       # 7. Archive screenshots
       - name: Archive Screenshots
         if: always()
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: screenshots
           path: screenshots/
